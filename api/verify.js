@@ -325,15 +325,23 @@ export default async function handler(request, response) {
       }
 
       if (code === 400 || code === 401 || code === 403) {
-        return json(
-          response,
-          {
-            error:
-              "Google rejected the verification request. Check the Gemini project, key, and Free Tier configuration."
-          },
-          502,
-          headers
-        );
+  console.error("Gemini API rejected request:", {
+    code,
+    status: geminiData?.error?.status || "UNKNOWN",
+    message:
+      safeString(geminiData?.error?.message) ||
+      "No error message returned"
+  });
+
+  return json(
+    response,
+    {
+      error:
+        "Google rejected the verification request. Check the Gemini project, key, and Free Tier configuration."
+    },
+    502,
+    headers
+  );
       }
 
       return json(
