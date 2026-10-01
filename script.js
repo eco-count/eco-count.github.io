@@ -4,7 +4,7 @@ const GOOGLE_CACHE_KEY = "ecoCountGoogleCacheV2";
 // Replace this ONE URL after you deploy the Vercel backend.
 // Example:
 // const VERIFY_API_URL = "https://eco-count-api.vercel.app/api/verify";
-const VERIFY_API_URL = "https://YOUR-VERCEL-PROJECT.vercel.app/api/verify";
+const VERIFY_API_URL = "https://eco-count-api.vercel.app/api/verify";
 
 const GOOGLE_CACHE_DAYS = 30;
 const MODEL_NAME = "gemini-2.5-flash";
