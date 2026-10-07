@@ -12,7 +12,7 @@
 <header class="shell nav">
   <div class="brand">
     <div class="brand-name">Eco Count</div>
-    <div class="brand-tag">plastic tracker · v2</div>
+    <div class="brand-tag">plastic tracker · v3</div>
   </div>
   <div class="count-pill" id="countPill">Total plastic count: 0</div>
 </header>
@@ -71,6 +71,42 @@
     </div>
 
     <div class="sources" id="sourcesBox"></div>
+
+    <div class="actions-box" id="actionsBox" hidden>
+      <div class="actions-head">
+        <div>
+          <h3>What can you do with it?</h3>
+          <p>Gemini suggests practical ways to reduce, reuse, and recycle this plastic.</p>
+        </div>
+        <span class="ai-pill">Gemini AI</span>
+      </div>
+
+      <div class="actions-grid">
+        <article class="action-card">
+          <div class="action-icon">↓</div>
+          <div>
+            <strong>Reduce</strong>
+            <p id="reduceAction"></p>
+          </div>
+        </article>
+
+        <article class="action-card">
+          <div class="action-icon">↻</div>
+          <div>
+            <strong>Reuse</strong>
+            <p id="reuseAction"></p>
+          </div>
+        </article>
+
+        <article class="action-card">
+          <div class="action-icon">♻</div>
+          <div>
+            <strong>Recycle</strong>
+            <p id="recycleAction"></p>
+          </div>
+        </article>
+      </div>
+    </div>
   </section>
 
   <section class="history-section">

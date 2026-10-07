@@ -1,5 +1,6 @@
 const STORAGE_KEY = "ecoCountHistoryV2";
 const GEMINI_CACHE_KEY = "ecoCountGeminiCacheV3";
+const ADVICE_CACHE_KEY = "ecoCountAdviceCacheV1";
 
 // Replace this ONE URL after you deploy the Vercel backend.
 // Example:
@@ -13,6 +14,7 @@ let knowledge = null;
 let searchIndex = { confirmed: [], assumable: [], nonplastic: [] };
 let history = loadHistory();
 let knowledgeReady = null;
+let activeResultToken = 0;
 
 const els = {
   form: document.getElementById("checkForm"),
@@ -30,6 +32,10 @@ const els = {
   resultWhy: document.getElementById("resultWhy"),
   resultSource: document.getElementById("resultSource"),
   sourcesBox: document.getElementById("sourcesBox"),
+  actionsBox: document.getElementById("actionsBox"),
+  reduceAction: document.getElementById("reduceAction"),
+  reuseAction: document.getElementById("reuseAction"),
+  recycleAction: document.getElementById("recycleAction"),
   dismiss: document.getElementById("dismissButton"),
   history: document.getElementById("history"),
   clearHistory: document.getElementById("clearHistory")
@@ -120,6 +126,154 @@ function cacheVerification(raw, result) {
   }
 
   saveGeminiCache(cache);
+}
+
+
+function loadAdviceCache() {
+  try {
+    const value = JSON.parse(localStorage.getItem(ADVICE_CACHE_KEY) || "{}");
+    return value && typeof value === "object" ? value : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveAdviceCache(cache) {
+  localStorage.setItem(ADVICE_CACHE_KEY, JSON.stringify(cache));
+}
+
+function getAdviceCacheKey(raw, type, code) {
+  return [normalize(raw), normalize(type || ""), String(code ?? "")].join("|");
+}
+
+function getCachedAdvice(raw, type, code) {
+  const cache = loadAdviceCache();
+  const key = getAdviceCacheKey(raw, type, code);
+  const item = cache[key];
+
+  if (!item) return null;
+
+  const age = Date.now() - Number(item.timestamp || 0);
+  const maxAge = GEMINI_CACHE_DAYS * 24 * 60 * 60 * 1000;
+
+  if (!Number.isFinite(age) || age < 0 || age > maxAge) {
+    delete cache[key];
+    saveAdviceCache(cache);
+    return null;
+  }
+
+  return item.actions || null;
+}
+
+function cacheAdvice(raw, type, code, actions) {
+  const cache = loadAdviceCache();
+  cache[getAdviceCacheKey(raw, type, code)] = {
+    timestamp: Date.now(),
+    actions
+  };
+
+  const keys = Object.keys(cache);
+  if (keys.length > 250) {
+    keys
+      .sort((a, b) => Number(cache[a].timestamp || 0) - Number(cache[b].timestamp || 0))
+      .slice(0, keys.length - 250)
+      .forEach(key => delete cache[key]);
+  }
+
+  saveAdviceCache(cache);
+}
+
+function hideActions() {
+  if (!els.actionsBox) return;
+  els.actionsBox.hidden = true;
+  els.actionsBox.classList.remove("actions-loading");
+  els.reduceAction.textContent = "";
+  els.reuseAction.textContent = "";
+  els.recycleAction.textContent = "";
+}
+
+function showActionLoading() {
+  if (!els.actionsBox) return;
+  els.actionsBox.hidden = false;
+  els.actionsBox.classList.add("actions-loading");
+  els.reduceAction.textContent = "Generating a practical way to use less of this plastic…";
+  els.reuseAction.textContent = "Finding a safe way to use it again…";
+  els.recycleAction.textContent = "Working out the best recycling guidance…";
+}
+
+function showActions(actions, token) {
+  if (!els.actionsBox || token !== activeResultToken) return;
+
+  const reduce = String(actions?.reduce || "").trim();
+  const reuse = String(actions?.reuse || "").trim();
+  const recycle = String(actions?.recycle || "").trim();
+
+  if (!reduce && !reuse && !recycle) {
+    hideActions();
+    return;
+  }
+
+  els.actionsBox.hidden = false;
+  els.actionsBox.classList.remove("actions-loading");
+  els.reduceAction.textContent = reduce || "No specific reduction tip was returned.";
+  els.reuseAction.textContent = reuse || "No specific reuse tip was returned.";
+  els.recycleAction.textContent = recycle || "Check your local recycling rules for this item.";
+}
+
+async function fetchAdvice(raw, type, code, token) {
+  const cached = getCachedAdvice(raw, type, code);
+
+  if (cached) {
+    showActions(cached, token);
+    return;
+  }
+
+  if (!isBackendConfigured()) return;
+
+  showActionLoading();
+
+  try {
+    const response = await fetch(VERIFY_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        mode: "advice",
+        item: raw,
+        plasticType: type || "Plastic",
+        code: code ?? null
+      })
+    });
+
+    let payload = null;
+    try {
+      payload = await response.json();
+    } catch {
+      payload = null;
+    }
+
+    if (!response.ok) {
+      throw new Error(payload?.error || `Advice backend returned HTTP ${response.status}.`);
+    }
+
+    const actions = payload?.actions;
+    if (!actions || typeof actions !== "object") {
+      throw new Error("Gemini returned no usable recycling advice.");
+    }
+
+    const clean = {
+      reduce: String(actions.reduce || "").trim(),
+      reuse: String(actions.reuse || "").trim(),
+      recycle: String(actions.recycle || "").trim()
+    };
+
+    cacheAdvice(raw, type, code, clean);
+    showActions(clean, token);
+  } catch (error) {
+    console.error(error);
+    if (token === activeResultToken) hideActions();
+  }
 }
 
 function isBackendConfigured() {
@@ -293,6 +447,7 @@ function showBaseResult({
   sourceLinks = [],
   grid = true
 }) {
+  hideActions();
   els.result.classList.add("active");
   els.expression.textContent = expression;
   els.resultLabel.textContent = label;
@@ -311,7 +466,7 @@ function showBaseResult({
     : "";
 }
 
-function displayConfirmed(raw, match) {
+function displayConfirmed(raw, match, token) {
   const e = match.entry;
   const result = {
     status: "Plastic",
@@ -332,9 +487,10 @@ function displayConfirmed(raw, match) {
   });
 
   addPlasticToHistory(raw, result);
+  fetchAdvice(raw, e.type, e.code, token);
 }
 
-function displayAssumable(raw, match) {
+function displayAssumable(raw, match, token) {
   const e = match.entry;
 
   const result = {
@@ -356,6 +512,7 @@ function displayAssumable(raw, match) {
   });
 
   addPlasticToHistory(raw, result);
+  fetchAdvice(raw, result.type, result.code, token);
 }
 
 function displayNonPlastic(raw, match) {
@@ -403,11 +560,11 @@ function displayUnavailable(raw, message) {
   });
 }
 
-async function geminiVerify(raw) {
+async function geminiVerify(raw, token) {
   const cached = getCachedVerification(raw);
 
   if (cached) {
-    applyGeminiResult(raw, cached);
+    applyGeminiResult(raw, cached, token);
     return;
   }
 
@@ -464,7 +621,7 @@ async function geminiVerify(raw) {
     }
 
     cacheVerification(raw, payload);
-    applyGeminiResult(raw, payload);
+    applyGeminiResult(raw, payload, token);
   } catch (error) {
     console.error(error);
     displayUnavailable(raw, error.message || "Gemini verification could not return a reliable result.");
@@ -474,7 +631,7 @@ async function geminiVerify(raw) {
   }
 }
 
-function applyGeminiResult(raw, result) {
+function applyGeminiResult(raw, result, token) {
   const sources = Array.isArray(result.sources)
     ? result.sources.filter(source => source?.url).slice(0, 5)
     : [];
@@ -494,12 +651,18 @@ function applyGeminiResult(raw, result) {
       sub: "Gemini says it can be plastic",
       text: `Gemini's classification supports treating "${raw}" as plastic. It has been added to your Eco Count history.`,
       material: "Plastic · exact resin not established",
-      why: result.reason || "Web evidence supports that the item can be plastic.",
+      why: result.reason || "Gemini's general-knowledge classification supports treating the item as plastic.",
       source: "Gemini AI",
       sourceLinks: sources
     });
 
     addPlasticToHistory(raw, outcome);
+    const hasActions = result.actions &&
+      [result.actions.reduce, result.actions.reuse, result.actions.recycle]
+        .some(value => String(value || "").trim());
+
+    if (hasActions) showActions(result.actions, token);
+    else fetchAdvice(raw, outcome.type, outcome.code, token);
     return;
   }
 
@@ -511,7 +674,7 @@ function applyGeminiResult(raw, result) {
       sub: "Gemini says it is not plastic",
       text: `Gemini's classification does not support "${raw}" being plastic.`,
       material: "Non-plastic",
-      why: result.reason || "Web evidence does not support plastic construction.",
+      why: result.reason || "Gemini's general-knowledge classification does not support treating the item as plastic.",
       source: "Gemini AI",
       sourceLinks: sources
     });
@@ -531,11 +694,11 @@ function applyGeminiResult(raw, result) {
   }
 }
 
-async function classify(raw) {
+async function classify(raw, token) {
   const match = localMatch(raw);
 
   if (match?.type === "confirmed") {
-    displayConfirmed(raw, match);
+    displayConfirmed(raw, match, token);
     return;
   }
 
@@ -545,11 +708,11 @@ async function classify(raw) {
   }
 
   if (match?.type === "assumable") {
-    displayAssumable(raw, match);
+    displayAssumable(raw, match, token);
     return;
   }
 
-  await geminiVerify(raw);
+  await geminiVerify(raw, token);
 }
 
 els.form.addEventListener("submit", async event => {
@@ -569,9 +732,11 @@ els.form.addEventListener("submit", async event => {
     return;
   }
 
+  const token = ++activeResultToken;
+
   try {
     if (knowledgeReady) await knowledgeReady;
-    await classify(raw);
+    await classify(raw, token);
   } catch (error) {
     console.error(error);
     displayUnavailable(raw, "Eco Count could not load its local knowledge base.");
@@ -579,6 +744,8 @@ els.form.addEventListener("submit", async event => {
 });
 
 els.dismiss.addEventListener("click", () => {
+  activeResultToken += 1;
+  hideActions();
   els.result.classList.remove("active");
   els.input.focus();
 });
@@ -595,6 +762,8 @@ els.clearHistory.addEventListener("click", () => {
   history = [];
   saveHistory();
   renderHistory();
+  activeResultToken += 1;
+  hideActions();
   els.result.classList.remove("active");
 });
 
