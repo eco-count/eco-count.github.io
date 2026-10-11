@@ -1,10 +1,14 @@
+export const config = { api: { bodyParser: { sizeLimit: "2mb" } } };
+
 const MODEL = "gemini-3.5-flash-lite";
 
 const GEMINI_URL =
   `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
 const MAX_ITEM_LENGTH = 120;
-const MAX_BODY_BYTES = 5000;
+const MAX_BODY_BYTES = 1_500_000;
+const MAX_IMAGE_BASE64_LENGTH = 1_350_000;
+const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 const ipBuckets = globalThis.__ecoCountIpBuckets || new Map();
 globalThis.__ecoCountIpBuckets = ipBuckets;
@@ -133,31 +137,32 @@ function safeString(value) {
     : "";
 }
 
-function buildClassifyPrompt(item) {
+function buildClassifyPrompt(item, hasImage = false) {
   return `
 You are the classification engine for Eco Count.
 
-The user entered:
+The user entered this description:
 "${item}"
+${hasImage ? "A photo of the item is attached. Inspect the visible item and packaging carefully." : "No photo is attached. Classify the item based on the description."}
 
-Determine whether this item can be plastic.
-
+Determine whether this item can reasonably be plastic, including common plastic packaging or parts.
 Return ONLY JSON matching this schema:
-
 {
   "verdict": "YES" | "NO" | "UNCLEAR",
   "reason": "short explanation",
-  "recognized_item": true | false
+  "recognized_item": true | false,
+  "identified_item": "short, clear item name"
 }
 
 Rules:
-
-- YES when the named item can reasonably be made from plastic.
-- NO when the item clearly cannot be plastic.
-- UNCLEAR when the item is ambiguous, unknown, or there is not enough information.
-- Do not invent a specific resin code.
-- Do not use web search.
-- Base the answer on general knowledge.
+- YES when the described or pictured item can reasonably be made from plastic.
+- NO when the item clearly cannot be plastic as described or pictured.
+- UNCLEAR when the item is ambiguous, obscured, unknown, or there is not enough evidence.
+- In a photo, do not infer the exact resin type or recycling eligibility unless the label/code is clearly legible.
+- Never claim the exact resin type from appearance alone.
+- identified_item should be a concise, generic name for the item visible or described, not a brand guess. For a photo, name the main item and include packaging when relevant.
+- Do not use web search or invent sources.
+- Base the answer on the visible evidence and reliable general knowledge.
 `;
 }
 
@@ -336,6 +341,17 @@ export default async function handler(request, response) {
     );
   }
 
+  const image = body?.image && typeof body.image === "object" ? body.image : null;
+  let imagePart = null;
+  if (image) {
+    const mimeType = safeString(image.mimeType);
+    const data = safeString(image.data);
+    if (!ALLOWED_IMAGE_TYPES.has(mimeType) || !data || data.length > MAX_IMAGE_BASE64_LENGTH || !/^[A-Za-z0-9+/]+={0,2}$/.test(data)) {
+      return json(response, { error: "The photo format or size is not supported. Try a smaller JPEG, PNG, or WebP image." }, 400, headers);
+    }
+    imagePart = { inlineData: { mimeType, data } };
+  }
+
   const plasticType =
     safeString(body?.plasticType);
 
@@ -381,8 +397,9 @@ export default async function handler(request, response) {
                     plasticType,
                     code
                   )
-                : buildClassifyPrompt(item)
-          }
+                : buildClassifyPrompt(item, Boolean(imagePart))
+          },
+          ...(mode === "classify" && imagePart ? [imagePart] : [])
         ]
       }
     ],
@@ -431,13 +448,17 @@ export default async function handler(request, response) {
 
                 recognized_item: {
                   type: "BOOLEAN"
+                },
+                identified_item: {
+                  type: "STRING"
                 }
               },
 
               required: [
                 "verdict",
                 "reason",
-                "recognized_item"
+                "recognized_item",
+                "identified_item"
               ]
             }
     }
