@@ -31,12 +31,6 @@ Eco Count helps you record everyday plastic use, check items through text or pho
 
 ---
 
-<p align="center">
-  <strong>Eco Count</strong><br>
-  <em>Know it. Count it. Reduce it.</em><br>
-  <sub>Made by Johan Rohith</sub>
-</p>
-
 ## Why Eco Count?
 
 Plastic use can be difficult to notice when each item feels like a small, separate choice. Eco Count makes those habits easier to see by turning everyday items into a trackable record and pairing identification with practical next steps. Its goal is to help people make more informed, repeatable decisions about plastic use—not simply count waste.
@@ -45,3 +39,10 @@ Plastic use can be difficult to notice when each item feels like a small, separa
 
 Eco Count checks items against a local plastic knowledge file. When a check needs extra verification or includes a photo, the frontend can call the Vercel API, which uses Google Gemini to return a structured result and related guidance. The usage history is kept in the browser and can be exported or backed up by the user.
 
+---
+
+<p align="center">
+  <strong>Eco Count</strong><br>
+  <em>Know it. Count it. Reduce it.</em><br>
+  <sub>Made by Johan Rohith</sub>
+</p>
