@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="johanrohith.me/eco-count/assets/eco-count-readme-banner.svg" alt="Eco Count — Know it. Count it. Reduce it." width="100%">
+  <img src="https://johanrohith.me/eco-count/assets/eco-count-readme-banner.svg" alt="Eco Count — Know it. Count it. Reduce it." width="100%">
 </p>
 
 Eco Count helps you record everyday plastic use, check items through text or photos, and understand practical ways to reduce, reuse, and recycle what you consume.
