@@ -1,60 +1,150 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="400" viewBox="0 0 1200 400" role="img" aria-labelledby="title desc">
-  <title id="title">Eco Count — Track your plastic footprint</title>
-  <desc id="desc">A green editorial banner with a plastic bottle surrounded by a continuously orbiting recycling loop.</desc>
+  <title id="title">Eco Count — Know your plastic. Make each choice count.</title>
+  <desc id="desc">A polished botanical green banner for Eco Count, featuring a reusable-looking transparent bottle surrounded by a smoothly rotating recycling loop that passes behind and in front of the bottle.</desc>
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3f8e9"/><stop offset=".58" stop-color="#e4f0d5"/><stop offset="1" stop-color="#d4e7c2"/></linearGradient>
-    <linearGradient id="bottle" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8fcf9a"/><stop offset=".48" stop-color="#d3f0cb"/><stop offset="1" stop-color="#69b97c"/></linearGradient>
-    <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#438d54"/><stop offset="1" stop-color="#78b968"/></linearGradient>
-    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#2c653d" flood-opacity=".15"/></filter>
-    <clipPath id="bottleMask"><path d="M760 111h32v26c0 10 9 15 16 24 8 10 11 23 11 39v93c0 20-13 34-33 34h-41c-20 0-33-14-33-34v-93c0-16 4-29 12-39 7-9 16-14 16-24v-26z"/></clipPath>
-    <path id="orbitArrow" d="M0 -112 A112 112 0 0 1 96 -57 l-20 2 29 31 17-39-17 6 A132 132 0 0 0 0 -132 Z"/>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f6f8ec"/>
+      <stop offset=".52" stop-color="#eaf3dc"/>
+      <stop offset="1" stop-color="#d8eacb"/>
+    </linearGradient>
+    <linearGradient id="sunwash" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#d4e8c5" stop-opacity=".08"/>
+    </linearGradient>
+    <linearGradient id="bottleGlass" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#74ba88" stop-opacity=".95"/>
+      <stop offset=".22" stop-color="#c5ebc4" stop-opacity=".96"/>
+      <stop offset=".48" stop-color="#edf8da" stop-opacity=".98"/>
+      <stop offset=".76" stop-color="#a9ddb0" stop-opacity=".98"/>
+      <stop offset="1" stop-color="#5ba977" stop-opacity=".98"/>
+    </linearGradient>
+    <linearGradient id="cap" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3f9260"/>
+      <stop offset="1" stop-color="#236c48"/>
+    </linearGradient>
+    <linearGradient id="loopGreen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#247b4b"/>
+      <stop offset="1" stop-color="#4ba35a"/>
+    </linearGradient>
+    <linearGradient id="loopLime" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#98c85e"/>
+      <stop offset="1" stop-color="#4f9b54"/>
+    </linearGradient>
+    <filter id="bottleShadow" x="-45%" y="-30%" width="190%" height="190%">
+      <feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#245e3a" flood-opacity=".22"/>
+    </filter>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="5" stdDeviation="9" flood-color="#4d8152" flood-opacity=".10"/>
+    </filter>
+    <pattern id="microDots" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#649c66" opacity=".15"/>
+    </pattern>
+    <clipPath id="bannerClip"><rect width="1200" height="400" rx="26"/></clipPath>
+    <clipPath id="orbitBackClip"><rect x="-180" y="-180" width="360" height="180"/></clipPath>
+    <clipPath id="orbitFrontClip"><rect x="-180" y="0" width="360" height="180"/></clipPath>
+    <g id="orbitMark" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Three separated curved arrows create a continuous recycling orbit. -->
+      <path d="M -64,-103 A 96,132 0 0 1 64,-103" stroke="url(#loopGreen)" stroke-width="13"/>
+      <path d="M 48,-116 L 78,-94 L 43,-91 Z" fill="#287e4b" stroke="none"/>
+      <path d="M 76,-78 A 96,132 0 0 1 76,78" stroke="#4d9f58" stroke-width="13"/>
+      <path d="M 91,61 L 74,94 L 60,62 Z" fill="#4d9f58" stroke="none"/>
+      <path d="M 62,103 A 96,132 0 0 1 -62,103" stroke="url(#loopLime)" stroke-width="13"/>
+      <path d="M -42,117 L -76,95 L -41,91 Z" fill="#5eaa56" stroke="none"/>
+      <path d="M -76,77 A 96,132 0 0 1 -76,-77" stroke="#318b50" stroke-width="13"/>
+      <path d="M -91,-60 L -74,-94 L -60,-62 Z" fill="#318b50" stroke="none"/>
+    </g>
   </defs>
-  <rect width="1200" height="400" rx="28" fill="url(#bg)"/>
-  <circle cx="955" cy="201" r="166" fill="#d0e6bf" opacity=".52"/>
-  <circle cx="955" cy="201" r="133" fill="none" stroke="#9fc99a" stroke-width="1.5" stroke-dasharray="3 9" opacity=".75"/>
-  <path d="M0 330C145 295 211 368 340 342s205-35 317 8 219 8 300-12 151-12 243 15v47H0z" fill="#c7dfb6" opacity=".55"/>
-  <g fill="#4b8752" opacity=".18"><circle cx="1047" cy="64" r="5"/><circle cx="1090" cy="108" r="3"/><circle cx="858" cy="63" r="4"/><circle cx="1104" cy="292" r="5"/><circle cx="852" cy="310" r="3"/></g>
-  <g transform="translate(82 0)">
-    <text x="0" y="160" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="19" font-weight="700" letter-spacing="5" fill="#4f8b54">A SMALL STEP. A BIGGER IMPACT.</text>
-    <text x="-2" y="226" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="62" font-weight="800" letter-spacing="-2.5" fill="#204f32">Eco <tspan fill="#5a9d52">Count</tspan></text>
-    <rect x="0" y="250" width="76" height="5" rx="2.5" fill="#6baa5d"/>
-    <text x="0" y="289" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="21" font-weight="500" fill="#52745a">Make your plastic footprint count.</text>
-    <g transform="translate(0 322)" fill="#6c9f66" opacity=".75"><circle cx="6" cy="0" r="3"/><circle cx="20" cy="0" r="3"/><circle cx="34" cy="0" r="3"/><path d="M48 0h54" stroke="#6c9f66" stroke-width="2" stroke-linecap="round"/></g>
-  </g>
-  <!-- Orbit path is split into front and back halves. The rear half is dimmed behind the bottle. -->
-  <g transform="translate(955 202)">
-    <circle r="112" fill="none" stroke="#7ab66d" stroke-width="2" stroke-dasharray="3 10" opacity=".45"/>
-    <g opacity=".34" fill="#2d8650">
-      <path d="M0 -126 A126 126 0 0 0 0 126" fill="none" stroke="#2d8650" stroke-width="13" stroke-linecap="round" stroke-dasharray="1 1000"/>
-    </g>
-    <g id="orbitBack" fill="#398e55" opacity=".62">
-      <path d="M-8 -105 A105 105 0 0 0 -8 105" fill="none" stroke="#398e55" stroke-width="12" stroke-linecap="round"/>
-      <path d="M-12 92l4 25 22-14z"/>
-    </g>
-    <g id="orbitingMark">
-      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="9s" repeatCount="indefinite"/>
-      <path d="M0 -125 A125 125 0 0 1 108 -62" fill="none" stroke="#2f8b50" stroke-width="13" stroke-linecap="round"/>
-      <path d="M96 -78l31 15-7-34z" fill="#2f8b50"/>
-      <path d="M108 -62 A125 125 0 0 1 108 62" fill="none" stroke="#68ad55" stroke-width="13" stroke-linecap="round"/>
-      <path d="M95 78l32-15-7 34z" fill="#68ad55"/>
-      <path d="M108 62 A125 125 0 0 1 0 125" fill="none" stroke="#2f8b50" stroke-width="13" stroke-linecap="round"/>
-      <path d="M17 107l-17 31-17-31z" fill="#2f8b50"/>
-    </g>
-    <!-- Bottle sits above the rear orbit; the front orbit returns over it. -->
-    <g id="bottle" filter="url(#shadow)">
-      <path d="M-16 -103h32v24c0 10 9 15 16 24 8 10 11 23 11 39v93c0 20-13 34-33 34h-41c-20 0-33-14-33-34v-93c0-16 4-29 12-39 7-9 16-14 16-24v-24z" fill="url(#bottle)" stroke="#438d5a" stroke-width="3"/>
-      <rect x="-18" y="-126" width="36" height="25" rx="5" fill="#2d8050"/>
-      <path d="M-18 -118h36M-17 -111h34" stroke="#9dd49c" stroke-width="2" opacity=".7"/>
-      <path d="M-28 -43v88" stroke="#eff9df" stroke-width="8" stroke-linecap="round" opacity=".75"/>
-      <path d="M-23 13h46" stroke="#438d5a" stroke-width="2" opacity=".6"/>
-      <g transform="translate(0 11)" fill="none" stroke="#2f8050" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M-18 0l10-17 10 17h-8"/><path d="M5 -14l16 3-7 12"/><path d="M16 8l-10 15-9-15h8"/>
+
+  <g clip-path="url(#bannerClip)">
+    <rect width="1200" height="400" fill="url(#background)"/>
+    <rect width="1200" height="400" fill="url(#microDots)" opacity=".36"/>
+    <ellipse cx="916" cy="185" rx="258" ry="225" fill="url(#sunwash)"/>
+    <circle cx="912" cy="194" r="172" fill="#d5e9c7" opacity=".46"/>
+    <circle cx="912" cy="194" r="147" fill="none" stroke="#8fbd88" stroke-width="1.4" stroke-dasharray="2 10" opacity=".63"/>
+    <circle cx="912" cy="194" r="160" fill="none" stroke="#ffffff" stroke-width="1.5" opacity=".62"/>
+
+    <!-- Quiet, rolling landscape adds depth without competing with the title. -->
+    <path d="M0 337 C145 301 225 366 353 344 C470 324 525 349 638 363 C776 381 855 335 970 346 C1060 355 1121 379 1200 351 L1200 400 L0 400 Z" fill="#cfe4bf" opacity=".75"/>
+    <path d="M0 359 C139 337 222 383 344 363 C469 343 575 378 696 381 C852 385 945 352 1065 371 C1128 381 1165 383 1200 374 L1200 400 L0 400 Z" fill="#b7d9aa" opacity=".52"/>
+
+    <!-- Header label -->
+    <g transform="translate(82 88)">
+      <rect width="256" height="36" rx="18" fill="#ffffff" fill-opacity=".65" stroke="#c7ddbc" stroke-width="1"/>
+      <g transform="translate(18 18)" fill="none" stroke="#378653" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M-6 5 C-7-4 -1-9 7-9 C7-1 2 5-6 5Z" fill="#75b765" fill-opacity=".42"/>
+        <path d="M-6 5 L4-5"/>
       </g>
-      <path d="M-35 66h70" stroke="#e6f5d9" stroke-width="2" opacity=".6"/>
+      <text x="37" y="23" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="2.2" fill="#39784a">PLASTIC FOOTPRINT TRACKER</text>
     </g>
-    <!-- Small foreground arc creates the over/under orbit illusion. -->
-    <path d="M-88 88 A125 125 0 0 0 88 88" fill="none" stroke="#68ad55" stroke-width="13" stroke-linecap="round"/>
-    <path d="M72 92l29 5-15-29z" fill="#68ad55"/>
+
+    <!-- Main wordmark -->
+    <text x="78" y="203" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="76" font-weight="780" letter-spacing="-3.8" fill="#1d4d34">Eco<tspan dx="15" fill="#4c9a52">Count</tspan></text>
+    <path d="M82 224 H148" stroke="#75b65d" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="160" cy="224" r="2.5" fill="#75b65d"/>
+    <text x="82" y="264" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="520" fill="#486a50">Know your plastic.</text>
+    <text x="82" y="294" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="520" fill="#486a50">Make each choice count.</text>
+
+    <!-- Quiet supporting detail -->
+    <g transform="translate(82 333)">
+      <circle cx="5" cy="0" r="4" fill="#49945a"/>
+      <text x="19" y="5" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="1.55" fill="#5a805c">SMALL CHOICES. REAL IMPACT.</text>
+    </g>
+
+    <!-- Illustration ground and orbit -->
+    <ellipse cx="912" cy="333" rx="124" ry="16" fill="#5c9256" opacity=".14"/>
+    <g transform="translate(912 194)">
+      <ellipse rx="92" ry="132" fill="none" stroke="#6da965" stroke-width="2" stroke-dasharray="2 9" opacity=".35"/>
+      <ellipse rx="111" ry="151" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="1 12" opacity=".85"/>
+      <!-- The orbit is duplicated and clipped into rear/front halves. The bottle sits between them. -->
+      <g clip-path="url(#orbitBackClip)" opacity=".98">
+        <use xlink:href="#orbitMark">
+          <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="22s" repeatCount="indefinite"/>
+        </use>
+      </g>
+
+      <!-- Floating droplets on the back plane -->
+      <g fill="#6da66b" opacity=".42">
+        <circle cx="-142" cy="-76" r="4"/><circle cx="132" cy="-93" r="3"/><circle cx="-130" cy="79" r="3"/>
+      </g>
+
+      <!-- Bottle illustration -->
+      <g id="bottleIllustration" filter="url(#bottleShadow)">
+        <!-- Main vessel silhouette with shaped shoulders and rounded base -->
+        <path d="M-20 -111 L20 -111 L20 -83 C20 -71 31 -62 40 -51 C49 -39 53 -25 53 -7 L53 103 C53 123 40 137 20 137 L-20 137 C-40 137 -53 123 -53 103 L-53 -7 C-53 -25 -49 -39 -40 -51 C-31 -62 -20 -71 -20 -83 Z" fill="url(#bottleGlass)" stroke="#438c5b" stroke-width="3"/>
+        <!-- Side rim gives the glass a little thickness -->
+        <path d="M-49 -8 L-49 101 C-49 118 -38 130 -22 132" fill="none" stroke="#e1f5d8" stroke-width="2.2" opacity=".78"/>
+        <path d="M48 -8 L48 101 C48 119 38 129 22 132" fill="none" stroke="#3e8a57" stroke-width="2" opacity=".43"/>
+        <!-- Neck and cap -->
+        <path d="M-20 -112 L-20 -130 Q-20 -137 -13 -137 L13 -137 Q20 -137 20 -130 L20 -112 Z" fill="#8bc99b" stroke="#438c5b" stroke-width="2.5"/>
+        <rect x="-22" y="-151" width="44" height="25" rx="6" fill="url(#cap)"/>
+        <path d="M-18 -144 H18 M-18 -137 H18 M-18 -130 H18" stroke="#a8d9a9" stroke-width="2" opacity=".72"/>
+        <path d="M-26 -34 L-26 44" stroke="#f4fbe9" stroke-width="8" stroke-linecap="round" opacity=".78"/>
+        <path d="M-25 85 Q0 91 25 85" fill="none" stroke="#f0f9e6" stroke-width="2" opacity=".65"/>
+        <!-- Simple, crisp recycle emblem on the bottle -->
+        <g transform="translate(1 9)" fill="none" stroke="#277c4c" stroke-width="3.3" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M-21 -2 L-10 -21 L0 -4 L-8 -4"/>
+          <path d="M7 -19 L24 -16 L17 -3"/>
+          <path d="M17 7 L7 24 L-3 8 L5 8"/>
+        </g>
+      </g>
+
+      <!-- Front portion of the rotating orbit crosses the lower edge of the bottle, creating the wrap-around illusion. -->
+      <g clip-path="url(#orbitFrontClip)">
+        <use xlink:href="#orbitMark">
+          <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="22s" repeatCount="indefinite"/>
+        </use>
+      </g>
+    </g>
+
+    <!-- Little botanical flourish -->
+    <g transform="translate(1078 317)" fill="#438e51">
+      <path d="M0 14 C-22 -10 -45 -2 -46 -2 C-40 20 -17 31 0 14Z"/>
+      <path d="M2 12 C4 -18 28 -31 28 -31 C41 -7 23 12 2 12Z" fill="#65a95b"/>
+      <path d="M-1 15 L-27 -1 M2 13 L20 -18" fill="none" stroke="#dcefd0" stroke-width="2.3" stroke-linecap="round"/>
+    </g>
+    <circle cx="1083" cy="92" r="5" fill="#8abc78" opacity=".75"/>
+    <circle cx="1120" cy="124" r="2.5" fill="#6fa76a" opacity=".48"/>
+    <circle cx="1036" cy="70" r="3" fill="#6fa76a" opacity=".44"/>
   </g>
-  <g transform="translate(1087 342)" fill="#4b8c50"><path d="M0 0C-22-23-42-14-42-14-36 7-16 14 0 0z"/><path d="M0 0C3-26 23-34 23-34 34-13 18 1 0 0z"/><path d="M-1 1l-18-13M1 0l14-23" fill="none" stroke="#dcefd0" stroke-width="2" stroke-linecap="round"/></g>
+  <rect x="1" y="1" width="1198" height="398" rx="25" fill="none" stroke="#ffffff" stroke-opacity=".7" stroke-width="2"/>
 </svg>
